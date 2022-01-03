@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Availability
+{% endblock %}
+
+
+
+{% block main %}
+            <!-- LOGIN and SIGNUP -->
+            <div class="container-md bg-light flex-grow-1 mt-5 rounded">
+
+                <div class="row vh-100">
+
+
+                    <div class="card card-fluid mx-auto" style="width:100%">
+
+                        {% if userisinvited %}
+                        <div class="card-header bg-important p-5">
+                            <h1 class="text-body">{{ reunioninfo[0][0] }}</h1>
+                        </div>
+                        {% else %}
+                        <div class="card-header bg-important p-5">
+                            <h1 class="text-body">Something went wrong</h1>
+                        </div>
+                        {% endif %}
+
+                        <div class="card-body show-md" >
+
+                            <div class="jumbotron bg-white pt-4 mx-auto">
+                                {% if not userisinvited %}
+                                    <div class="clearfix">
+                                    <p class="lead">Perhaps this is a reunion you were not invited to...</p>
+                                    <a href="/" role="button" class="btn btn-primary">Back to list</a>
+                                    </div>
+                                {% elif not suggesteddatesinfo %}
+                                    <div class="clearfix">
+                                    <p class="lead">Hm, seems something went wrong</p>
+                                    <a href="/" role="button" class="btn btn-primary">Back to list</a>
+                                    </div>
+                                {% else %}
+                                    <div class="clearfix">
+                                    <p class="lead">We need your availability for the following dates:</p>
+                                    </div>
+                                      <!--<hr class="my-4">-->
+                                {% endif %}
+
+
+
+                                {% if suggesteddatesinfo %}
+                                 <form name="availability" id="availability" novalidate class="needs-validation" novalidate action="/availability/{{reunion_id}}" method="post">
+                                    <table class="table table-hover my-5">
+                                        <thead>
+                                            <tr>
+                                              <th style="width: 38%" scope="col">Date</th>
+                                              <th style="width: 20%" scope="col">Yes</th>
+                                              <th style="width: 20%" scope="col">Mwah</th>
+                                              <th style="width: 20%" scope="col">No</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for dateinfo in suggesteddatesinfo %}
+                                            <tr>
+                                              <td>{{ dateinfo[1] }} {{ dateinfo[2] }}</td>
+                                              <td><input required class="form-check-input mx-auto" type="radio" name="{{ dateinfo[0]}}" id="{{ dateinfo[0]}}-1" value="yes"></td>
+                                              <td><input required class="form-check-input mx-auto" type="radio" name="{{ dateinfo[0]}}" id="{{ dateinfo[0]}}-2" value="mwah"></td>
+                                              <td><input required class="form-check-input mx-auto" type="radio" name="{{ dateinfo[0]}}" id="{{ dateinfo[0]}}-3" value="no"></td>
+                                              </tr>
+                                            {% endfor %}
+
+                                      </tbody>
+                                    </table>
+                                    <div id="formmessage" class="text-danger mb-2"></div>
+                                    <input type="submit" name="availability" class="btn btn-primary" value="Send my availability"/>
+                                    </form>
+                                {% endif %}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- END LOGIN and SIGNUP-->
+    <SCRIPT>
+    // On clicking submit do following
+
+        $("input[type=submit]").click(function() {
+            //alert("function called")
+            var allChecked = true
+            {% for dateinfo in suggesteddatesinfo %}
+                var radioValue = $("input[name='{{ dateinfo[0]}}']:checked").val();
+                if (radioValue === undefined) {
+                    allChecked = false
+                }
+            {% endfor %}
+            if (allChecked === false) {
+                $("#formmessage").html("You missed a date")
+            }
+        });
+    </SCRIPT>
+{% endblock %}

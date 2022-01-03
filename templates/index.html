@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home - Overview
+{% endblock %}
+
+
+{% block main %}
+            <!-- ALL REUNIONS FOR USER OR BY USER -->
+            <div class="container-md bg-light flex-grow-1 mt-5 rounded">
+
+                <div class="row vh-100">
+
+
+                    <div class="card card-fluid mx-auto" style="width:100%">
+                        <div class="card-header bg-important p-5">
+                            <h1 class="text-body">Your reunions</h1>
+                        </div>
+                        <div class="card-body show-md" >
+
+                            <div class="jumbotron bg-white pt-4 mx-auto">
+                                {% if not organised and not invitedfor %}
+                                    <p class="lead">You have no reunions yet. No problem, let's get started!</p>
+                                    <a href="/new" role="button" class="btn btn-primary">Start reunion</a>
+                                {% else %}
+                                    <div class="clearfix">
+                                    <p class="float-right"><a href="/new" role="button" class="btn btn-primary">Start a new reunion</a></p>
+                                    <p class="lead float-left">You have the following reunions:</p>
+
+                                    </div>
+                                      <!--<hr class="my-4">-->
+                                {% endif %}
+                                {% if organised %}
+                                    <table class="table table-hover my-4">
+                                        <thead>
+                                            <tr>
+                                              <th style="width: 50%" scope="col">Reunions organised by you:</th>
+                                              <th style="width: 25%" scope="col">Organised by:</th>
+                                              <th style="width: 25%" scope="col">Status:</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for reunion in organised %}
+                                            <tr>
+                                              <td><a href="/reunion/{{ reunion[0]}}">{{ reunion[1] }}</a></td>
+                                              <td><a href="/reunion/{{ reunion[0]}}">You</a></td>
+                                              {% if reunion[3] == "scheduled" %}
+                                                  <td><a href="/reunion/{{ reunion[0]}}">{{ reunion[3] }} {{ reunion[4] }}</a></td>
+                                              {% elif reunion[3] == "areinvited" %}
+                                                  <td><a href="/reunion/{{ reunion[0]}}">invitations sent</a></td>
+                                              {% endif %}
+                                            </tr>
+                                            {% endfor %}
+
+                                      </tbody>
+                                    </table>
+                                {% endif %}
+                                <div class="my-4">&nbsp;</div>
+                                {% if invitedfor %}
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                              <th style="width: 50%" scope="col">Reunions you are invited to:</th>
+                                              <th style="width: 25%" scope="col">Organised by:</th>
+                                              <th style="width: 25%" scope="col">Status:</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for reunion in invitedfor %}
+                                                {% if reunion[3] == "readyavailability" %}
+                                                    <tr>
+                                                      <td><a href="/reunion/{{ reunion[0]}}">{{ reunion[1] }}</a></td>
+                                                      <td><a href="/reunion/{{ reunion[0]}}">{{ reunion[2] }}</a></td>
+                                                      {% if reunion[4] == "scheduled" %}
+                                                          <td><a href="/reunion/{{ reunion[0]}}">{{ reunion[5] }}</a></td>
+                                                      {% else %}
+                                                          <td><a href="/reunion/{{ reunion[0]}}">no date yet</a></td>
+                                                      {% endif %}
+                                                    </tr>
+                                                {% else %}
+                                                    <tr>
+                                                      <td><a href="/availability/{{ reunion[0]}}">{{ reunion[1] }}</a></td>
+                                                      <td><a href="/availability/{{ reunion[0]}}">{{ reunion[2] }}</a></td>
+                                                      <td><a href="/availability/{{ reunion[0]}}" class="text-danger">Please add your availability</a></td>
+                                                    </tr>
+
+                                                {% endif %}
+                                            {% endfor %}
+
+                                      </tbody>
+                                    </table>
+                                {% endif %}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- END -->
+{% endblock %}

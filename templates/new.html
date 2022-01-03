@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Start a new reunion
+{% endblock %}
+
+
+
+{% block main %}
+            <!-- LOGIN and SIGNUP-->
+            <div class="container-md bg-light flex-grow-1 mt-5 rounded">
+
+                <div class="row vh-100">
+
+
+                    <div class="card card-fluid mx-auto" style="width:100%">
+                        <div class="card-header bg-important p-5">
+                            <h1 class="text-body">{% if status == "start" %}Start new reunion{% else %}{{title}}{% endif %}</h1>
+                        </div>
+                        <div class="card-body show-md px-5" >
+
+                                <!-- TITLE -->
+                                {% if status == "start" %}
+                                <form name="givetitle" id="givetitle" novalidate class="needs-validation" novalidate action="/new" method="post">
+                                    <div class="form-group">
+                                        <label for="title"><h2>Reunion Title:</h2></label>
+                                        <input type="text" class="form-control mt-1" required placeholder="Your awesome reunion title" id="title" name="title" value="{{title}}" maxlength="50">
+                                        <div class="invalid-feedback">Oops, you forgot to fill in a title...</div>
+                                        <button type="submit" name="givetitle" class="btn btn-primary mt-3">Save</button>
+                                    </div>
+                                </form>
+                                {% endif %}
+
+
+                                <!-- INVITEES -->
+                                {% if status == "invites" or status == "invited" or status == "dates_picked" or status == "invitationssent" %}
+                                <div>
+                                    <p>You have invited:</br>
+                                    {% for invitee in invitees%}
+                                        {{invitee[0]}}<br>
+                                    {% endfor %}</p>
+                                </div>
+                                {% endif %}
+                                {% if inviteesmessage %}
+                                    {{ inviteesmessage }}
+                                {% endif %}
+
+                                {% if status == "created" or status == "invites" and inviteesnumber < 5 %}
+                                <form name="invitee" id="invitee" novalidate class="needs-validation" novalidate action="/new" method="post">
+                                    <input type="hidden" name="reunion_id" value="{{reunion_id}}">
+                                <!--<p id="login_message" class="text-danger">&nbsp;{{messagelogin}}</p>-->
+                                    <div class="form-group">
+                                        {% if status == "created"%}
+                                            <label for="title"><h3>Who do you want to invite (max. 5)</h3></label>
+                                        {% elif status == "invites" %}
+                                            <label for="title"><h3>Who else do you want to invite (max. 5)</h3></label>
+                                        {% endif %}
+                                        <input type="email" class="form-control mt-1" required placeholder="someone@something.com" id="invite" name="invite" autofocus>
+                                        <div class="invalid-feedback">Fill in an emailaddress of your friend...</div>
+                                        <button type="submit" name="invitee" class="btn btn-primary mt-3">Add email</button>
+                                    </div>
+                                </form>
+                                {% endif %}
+
+
+                                {% if status == "invites" %}
+                                    {% if inviteesnumber < 5 %}
+                                        <div class="mt-5">Or, when you have finished</div>
+                                        <form name="finish_invitees" id="finish_invitees" action="/new" method="post">
+                                            <input type="hidden" name="reunion_id" value="{{reunion_id}}">
+                                            <button type="submit" name="finish_invitees" class="btn btn-primary mt-3">Ready&nbsp;&nbsp;&nbsp;</button>
+                                        </form>
+                                    {% else %}
+                                        <div>You have reached the maximum number of invitees</div>
+                                        <form name="finish_invitees" id="finish_invitees" action="/new" method="post">
+                                            <input type="hidden" name="reunion_id" value="{{reunion_id}}">
+                                            <button type="submit" name="finish_invitees" class="btn btn-primary mt-3">Pick some dates&nbsp;&nbsp;</button>
+                                        </form>
+                                    {% endif %}
+
+
+
+                                {% endif %}
+
+
+                                <!-- DATES -->
+                                {% if status == "invited" %}
+                                    {% if result %}
+                                    <form name="pickdates" id="pickdates" action="/new" method="post">
+                                        <input type="hidden" name="reunion_id" value="{{reunion_id}}">
+                                        <label for="title"><h3>Dates you want to suggest</h3></label>
+                                        {% for possibility in result %}
+                                            <div class="checkbox">
+                                              <label>
+                                                <input type="checkbox" name="{{ possibility[0] }}">
+                                                &nbsp; {{ possibility[2] }} {{ possibility[1] }}
+                                              </label>
+                                            </div>
+                                        {% endfor %}
+                                    <button type="submit" name="pickdates" class="btn btn-primary mt-3">Save these dates&nbsp;&nbsp;</button>
+                                    </form>
+                                    {% else %}
+                                    Silly, we have no dates available to let you pick from. </br>
+                                    Shall we try to make some?
+                                    {% endif %}
+                                {% endif%}
+
+
+                                <!-- CHOSEN SUGGESTION DATES -->
+                                {% if status == "dates_picked" %}
+                                    {% if suggesteddates %}
+                                        <div>
+                                            <p>You have picked as suggestion dates:</br>
+                                            {% for suggestiondate in suggesteddates%}
+                                                {{suggestiondate}}<br>
+                                            {% endfor %}</p>
+                                        </div>
+                                        <form name="sendinvitations" id="sendinvitations" action="/new" method="post">
+                                            <input type="hidden" name="reunion_id" value="{{reunion_id}}">
+                                            <button type="submit" name="sendinvitations" class="btn btn-primary mt-3">Send invitations&nbsp;&nbsp;</button>
+                                        </form>
+                                    {% else %}
+                                     Sorry, we failed to retrieve the dates you picked. So ashamed...<br>
+                                     Want to give it another try?
+                                    {% endif %}
+                                {% endif%}
+
+                                <!-- INVITATIONS ARE SENT -->
+                                {% if status == "invitationssent" %}
+                                    {% if suggesteddates %}
+                                        <div>
+                                            <p>For the following suggestion dates:</br>
+                                            {% for suggestiondate in suggesteddates%}
+                                                {{suggestiondate[0]}}<br>
+                                            {% endfor %}</p>
+                                        </div>
+                                    {% endif %}
+                                        <div>
+                                            <!--<button href="/" class="btn btn-primary mt-3">See all reunions</button>-->
+                                            <a href="/" role="button" class="btn btn-primary">See all reunions</a>
+                                        </div>
+                                {% endif%}
+
+
+
+                                  <!--</div>-->
+                            <!--</div>-->
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- END LOGIN and SIGNUP-->
+{% endblock %}

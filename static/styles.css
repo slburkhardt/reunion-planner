@@ -1,0 +1,34 @@
+/* Make whole tablecell clickable */
+td a {
+   display: block;
+   color: inherit;
+}
+td a:hover {
+   text-decoration: none;
+   color: inherit;
+}
+.rotatedheader {
+    height:205px;
+}
+
+
+/* Enable table headers with rotated text */
+div.rotate {
+   height: 120px;
+   white-space: nowrap;
+	width: 0;
+}
+div.rotate > div {
+      transform:
+        translate(0px, 120px)
+        rotate(-90deg);
+}
+div.rotate > div > span {
+      /*border-bottom: 1px solid #ccc;*/
+      padding: 5px 10px;
+      /*text-align: middle;*/
+}
+
+.cellborderleft {
+    border-left: 1px solid #dee2e6;
+}

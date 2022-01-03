@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Reunion information
+{% endblock %}
+
+
+
+{% block main %}
+            <!-- LOGIN and SIGNUP-->
+            <div class="container-md bg-light flex-grow-1 mt-5 rounded">
+
+                <div class="row vh-100">
+
+
+                    <div class="card card-fluid mx-auto" style="width:100%">
+
+                        {% if userisinvited or userisorganiser %}
+                        <div class="card-header bg-important p-5">
+                            <h1 class="text-body">{{ reunioninfo[0][0] }}</h1>
+                        </div>
+                        {% else %}
+                        <div class="card-header bg-important p-5">
+                            <h1 class="text-body">Ehm are you sure this reunion is for you?</h1>
+                        </div>
+                        {% endif %}
+
+                        <div class="card-body show-md" >
+
+                            <div class="jumbotron bg-white pt-4 mx-auto">
+                            {% if userisinvited or userisorganiser %}
+                                {% if justscheduled %}
+                                    <div class="clearfix">
+                                    <p class="lead text-primary font-weight-bold">Yes! you picked a date! {{pickeddate}} </p>
+                                    </div>
+                                {% elif reunioninfo[0][2] == "scheduled" %}
+                                     <div class="clearfix">
+                                    <p class="lead text-primary font-weight-bold">Yes! a date has been picked! {{reunioninfo[0][3]}} </p>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                                {% if not userisinvited and not userisorganiser %}
+                                    <div class="clearfix">
+                                    <p class="lead">Perhaps this is a reunion you were not invited to...</p>
+                                    <a href="/" role="button" class="btn btn-primary">Back to list</a>
+                                    </div>
+                                {% else %}
+                                    <div class="clearfix">
+                                    <p class="lead">So far we have the following availabilities:</p>
+                                    </div>
+                                      <!--<hr class="my-4">-->
+                                {% endif %}
+
+
+                                {% if availabilities %}
+                                    {% if userisorganiser %}
+                                        <form name="datepicker" id="datepicker" novalidate class="needs-validation" novalidate action="/reunion/{{reunion_id}}" method="post">
+                                    {% endif%}
+                                    <table class="table table-hover my-5">
+                                        <!--<thead>-->
+                                        <!--    <tr>-->
+                                        <!--      {% if userisorganiser %}-->
+                                        <!--          <th style="width: 10%" scope="col">Pick</th>-->
+                                        <!--      {% endif %}-->
+                                        <!--      <th style="width: 20%" scope="col">Date</th>-->
+                                        <!--      {% for personinfo in availabilities[0][1] %}-->
+                                                  <!--<th style="width: 10%" scope="col">{{personinfo[0]}}</th>-->
+                                        <!--          <th class="rotate" style="width:5%" scope="col"></th>-->
+                                        <!--      {% endfor %}-->
+                                        <!--    </tr>-->
+                                        <!--</thead>-->
+
+                                        <thead>
+                                            <tr style="border-left-color: white">
+                                              {% if userisorganiser %}
+                                                  <th style="width:10%" scope="col">Pick</th>
+                                              {% endif %}
+                                              <th style="width:20%" scope="col">Date</th>
+                                              {% for personinfo in availabilities[0][1] %}
+                                                  <!--<th style="width: 10%" scope="col">{{personinfo[0]}}</th>-->
+                                                  <th style="width:10px" class="rotatedheader" scope="col">
+                                                      <div class="rotate mx-auto"><div>
+                                                          <span>{{personinfo[0]}}</span>
+                                                      </div></div>
+                                                  </th>
+                                              {% endfor %}
+                                            </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                            {% for dateinfo in availabilities %}
+                                            <tr>
+                                              {% if userisorganiser %}
+                                                  <td><input type="radio" name="pickeddate" value="{{ dateinfo[0] }}"/></td>
+                                              {% endif %}
+                                              <td {% if dateinfo[0] == reunioninfo[0][3] %}class="bg-light"{% endif%}>{{ dateinfo[0] }}</td>
+                                              {% for personinfo in dateinfo[1] %}
+                                                  <!--<td>{{personinfo[2]}}</td>-->
+
+                                                  {% if personinfo[2] == "awaiting" %}
+                                                      <td class="bg-light text-center cellborderleft">?</td>
+                                                  {% elif personinfo[2] == "yes" %}
+                                                      <td class="bg-success cellborderleft"></td>
+                                                  {% elif personinfo[2] == "mwah" %}
+                                                      <td class="bg-dark cellborderleft"></td>
+                                                  {% elif personinfo[2] == "no" %}
+                                                      <td class="bg-danger cellborderleft"></td>
+                                                  {% endif%}
+
+                                              {% endfor %}
+                                              </tr>
+                                            {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                    {% if userisorganiser %}
+                                    <div id="formmessage" class="text-danger mb-2">&nbsp;</div>
+                                    <input type="submit" name="datepicker" class="btn btn-primary" value="Set this date!"/>
+                                    </form>
+                                    {% endif %}
+                                {% endif %}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- END LOGIN and SIGNUP-->
+    <SCRIPT>
+    // On clicking submit do following
+
+        $("input[type=submit]").click(function() {
+            var isChecked = true;
+            var radioValue = $("input[name='pickeddate']:checked").val();
+            if (radioValue === undefined) {
+                $("#formmessage").html("If you want to set a date, you have to select one");
+                event.preventDefault();
+            }
+        });
+    </SCRIPT>
+{% endblock %}
