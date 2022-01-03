@@ -1,5 +1,5 @@
 # Reunion Planner
-### Final Project for Harvard's CS50 and to practice newly learned skills
+### Final Project for Harvard's CS50 and to practice my newly learned skills
 #### Video Demo:  [Reunion Planner on Youtube] (https://youtu.be/H1kr_UDd4LM)
 
 
