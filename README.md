@@ -52,7 +52,7 @@ The SQLite3 database and tables will be made and initially populated automatical
 
 ### Python Files
 
-**application.py**
+**app.py**
 - Enholds almost the full application.
 - Here libraries are being linked/loaded.
 - A new SQLite3 database is created, and functions are being called to make the database tables, and to populate the table with dates.
@@ -60,7 +60,7 @@ The SQLite3 database and tables will be made and initially populated automatical
 - It will handle and route most user actions with Flask, and routes to html pages.
 
 **dbsetup.py**
-- Is being called by application.py
+- Is being called by app.py
 - Enholds the functions to create necessary database tables and to populate the date table with dates
 <br>
 
