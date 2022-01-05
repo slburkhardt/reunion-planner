@@ -22,7 +22,7 @@
                                 <p id="login_message" class="text-danger">&nbsp;{{messagelogin}}</p>
                                   <div class="form-group">
                                     <label for="login_email">Email address:</label>
-                                    <input autofocus type="email" class="form-control" required placeholder="Enter email" id="login_email" name="login_email" value={{loginemail}}>
+                                    <input autofocus type="email" class="form-control" autocomplete="off" required placeholder="Enter email" id="login_email" name="login_email" value={{loginemail}}>
                                     <div class="invalid-feedback" style="display:none">Please enter valid email here too</div>
                                   </div>
                                   <div class="form-group">
@@ -49,7 +49,7 @@
                                   <p id="signup_message" class="text-danger">&nbsp;{{messagesignup}}</p>
                                   <div class="form-group">
                                     <label for="signup_email">Email address:</label>
-                                    <input type="email" required class="form-control" placeholder="Enter email" id="signup_email" name="signup_email" aria-describedby="inputGroupPrepend" required value={{signupemail}}>
+                                    <input type="email" required class="form-control" placeholder="Enter email" id="signup_email" name="signup_email" aria-describedby="inputGroupPrepend" autocomplete="off" required value={{signupemail}}>
                                     <div class="invalid-feedback" style="display:none">Please enter your email</div>
                                   </div>
                                   <div class="form-group">
